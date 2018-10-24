@@ -1,0 +1,31 @@
+		<% include partials/header %>
+
+		<div class="container">
+		  <header class="jumbotron">
+		  		<div class="container">
+		  		<h1>Welcome to Yelp-Grounds</h1>
+		  		<p>View out hand-picked ground from all over the world!</p>
+		    	<p>
+		    		<a class="btn btn-primary btn-lg" href="/grounds/new">Add new Ground</a>	
+		    	</p>
+			</div>
+		  </header>
+
+		  
+		  <div class="row text-center">
+		  <% grounds.forEach(function(ground){ %>
+		  	<div class="col-md-3 col-sm-6">
+		  		<div class="card">
+				  	<img class="card-img-top" src="<%= ground.image %>" alt="Ground image">
+		  			<div class="card-body">
+		    		<h5 class="card-title"><%= ground.name %></h5>
+		    		<p class="card-text">Not yet added</p>
+		    		<a href="#" class="btn btn-primary">not yet</a>
+		    		</div>
+		    	</div>
+			</div>
+		  <% }) %>
+		  </div>
+		</div>
+
+		<% include partials/footer %>
