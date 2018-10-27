@@ -12,7 +12,8 @@ mongoose.connect("mongodb://localhost/yelp", { useNewUrlParser: true })
 //Schema definition
 var groundSchema = new mongoose.Schema({
 	name: String,
-	image: String
+	image: String,
+	description: String
 });
 
 var Ground = mongoose.model("ground", groundSchema);
@@ -26,7 +27,7 @@ app.get("/grounds", function(request, response){
 		if(error){
 			console.log(error);
 		}else{
-			response.render("grounds" , {grounds: allGrounds});
+			response.render("index" , {grounds: allGrounds});
 		}
 	})
 });
@@ -42,7 +43,8 @@ app.post("/grounds", function(req, res){
 
 	Ground.create({
 		name: req.body.name,
-		image: req.body.image
+		image: req.body.image,
+		description: req.body.description
 	}, function (error, ground){
 		if(error){
 			console.log(error);
@@ -55,10 +57,21 @@ app.post("/grounds", function(req, res){
 	});
 });
 
-
+// SHOW
+app.get("/grounds/:id", function(request, response){
+	var objectId = request.params.id;
+	Ground.findById(objectId, function(error, groundFromDb){
+		if(error){
+			console.log(error);
+		}else{
+			 response.render("show" , {ground: groundFromDb});
+		}
+	});
+});
 
 app.get("*", function(request, response){
-	response.send("Sorry... page not found!");
+	response.send("Page not found");
 });
+
 
 app.listen(4000);
