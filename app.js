@@ -1,77 +1,34 @@
-var express = require("express");
-var app = express();
+var express 	= require("express"),
+	app 		= express(),
+    bodyParser  = require("body-parser"),
+    mongoose 	= require("mongoose");
 
-var bodyParser = require("body-parser");
+// Setup app
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
-app
+// Connect Mongodb
+mongoose.connect("mongodb://localhost/yelp", { useNewUrlParser: true })
+//Schema definition
+var groundSchema = new mongoose.Schema({
+	name: String,
+	image: String
+});
 
-var grounds = [
-	{
-		name: "Allianz Arena",
-		image: "https://pixabay.com/get/ea31b10b2df7043ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Metz",
-		image: "https://pixabay.com/get/e83db7092ff7093ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Marseille",
-		image: "https://pixabay.com/get/e830b80f2df3073ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Metz",
-		image: "https://pixabay.com/get/e83db7092ff7093ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Marseille",
-		image: "https://pixabay.com/get/e830b80f2df3073ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Metz",
-		image: "https://pixabay.com/get/e83db7092ff7093ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Marseille",
-		image: "https://pixabay.com/get/e830b80f2df3073ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-		{
-		name: "Allianz Arena",
-		image: "https://pixabay.com/get/ea31b10b2df7043ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Metz",
-		image: "https://pixabay.com/get/e83db7092ff7093ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Marseille",
-		image: "https://pixabay.com/get/e830b80f2df3073ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Metz",
-		image: "https://pixabay.com/get/e83db7092ff7093ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Marseille",
-		image: "https://pixabay.com/get/e830b80f2df3073ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Metz",
-		image: "https://pixabay.com/get/e83db7092ff7093ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	},
-	{
-		name: "Marseille",
-		image: "https://pixabay.com/get/e830b80f2df3073ed1584d05fb1d4e97e07ee3d21cac104491f0c270a1edb4bb_340.jpg"
-	}
-];
+var Ground = mongoose.model("ground", groundSchema);
 
 app.get("/", function(request, response){
 	response.render("landing");
 });
 
 app.get("/grounds", function(request, response){
-	response.render("grounds" , {grounds: grounds});
+	Ground.find({}, function(error, allGrounds){
+		if(error){
+			console.log(error);
+		}else{
+			response.render("grounds" , {grounds: allGrounds});
+		}
+	})
 });
 
 app.get("/grounds/new", function(request, response){
@@ -82,12 +39,20 @@ app.post("/grounds", function(req, res){
 	// adding ground
 	var newName = req.body.name;
 	var newImageUrl = req.body.image;
-	grounds.push({
-		name: newName,
-		image: newImageUrl
+
+	Ground.create({
+		name: req.body.name,
+		image: req.body.image
+	}, function (error, ground){
+		if(error){
+			console.log(error);
+		}else{
+			console.log("new ground added");
+			console.log(ground);
+			// redirect to grounds
+			res.redirect("/grounds");
+		}
 	});
-	// redirect to grounds
-	res.redirect("/grounds");
 });
 
 
