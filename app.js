@@ -1,7 +1,11 @@
 var express 	= require("express"),
 	app 		= express(),
     bodyParser  = require("body-parser"),
+    Ground  	= require("./models/ground"),
+    SeedDb  	= require("./seeds"),
     mongoose 	= require("mongoose");
+
+SeedDb();
 
 // Setup app
 app.use(bodyParser.urlencoded({extended: true}));
@@ -9,14 +13,6 @@ app.set("view engine", "ejs");
 
 // Connect Mongodb
 mongoose.connect("mongodb://localhost/yelp", { useNewUrlParser: true })
-//Schema definition
-var groundSchema = new mongoose.Schema({
-	name: String,
-	image: String,
-	description: String
-});
-
-var Ground = mongoose.model("ground", groundSchema);
 
 app.get("/", function(request, response){
 	response.render("landing");
@@ -60,7 +56,7 @@ app.post("/grounds", function(req, res){
 // SHOW
 app.get("/grounds/:id", function(request, response){
 	var objectId = request.params.id;
-	Ground.findById(objectId, function(error, groundFromDb){
+	Ground.findById(objectId).populate("comments").exec(function(error, groundFromDb){
 		if(error){
 			console.log(error);
 		}else{

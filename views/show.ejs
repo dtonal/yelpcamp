@@ -2,10 +2,14 @@
 
 
 	<div style="width: 70%; margin: 35px auto">
-	<div class="container">
-	<h1><%= ground.name%></h1>
-	<img src="<%= ground.image %>" alt="Ground image">
-	<p><%= ground.description%></p>
+		<div class="container">
+			<h1><%= ground.name%></h1>
+			<img src="<%= ground.image %>" alt="Ground image">
+			<p><%= ground.description%></p>
+			<% ground.comments.forEach(function(comment){ %>
+				<p><%=comment.text %> - <%=comment.author %></p>
+			<% }) %>
+		</div>
 	</div>
 	<a href="/grounds">Back</a>
 
