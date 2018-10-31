@@ -1,4 +1,4 @@
-	<% include partials/header %>
+	<% include ../partials/header %>
 
 
 	<div style="width: 70%; margin: 35px auto">
@@ -10,8 +10,9 @@
 				<p><%=comment.text %> - <%=comment.author %></p>
 			<% }) %>
 		</div>
+		<% include ../comments/new_emb %>
 	</div>
 	<a href="/grounds">Back</a>
 
 	</div>
-	<% include partials/footer %>
+	<% include ../partials/footer %>
