@@ -81,14 +81,7 @@ app.get("/grounds/:id/comments/new", function(req, res){
 
 app.post("/grounds/:id/comments", function(req, res){
 	// adding ground
-	var newText = req.body.text;
-	var newAuthor = req.body.author;
-
-	Comment.create(
-        {
-            text: newText,
-            author: newAuthor
-        }, function(err, comment){
+	Comment.create(req.body.comment, function(err, comment){
             if(err){
                 console.log(err);
             } else {

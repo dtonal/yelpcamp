@@ -1,4 +1,37 @@
 #newCommentForm {
-	background-color: #f7f7f9;
+	background-color: #D5DFE5;
 	padding: 15px;
+}
+
+.comment {
+	background-color: #D5DFE5;
+	padding: 20px;
+    margin-bottom: 20px;
+}
+
+.commentstext {
+
+}
+
+.commentsauthor {
+	margin-bottom: 0px;
+	font-style: italic;
+	font-size: 0.8em;
+}
+
+.comment {
+	margin-top: 10px;
+}
+
+#maincard {
+	margin-top: 10px;
+}
+
+body {
+	background-color: #00272B;
+}
+
+.jumbotron {
+	margin-top: 10px;
+	background-color: #D5DFE5;
 }

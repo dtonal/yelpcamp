@@ -1,17 +1,48 @@
 	<% include ../partials/header %>
 
+	<div class="row">
+  		<div class="col-md-3">
+  			<div class="container">
+  				<p class="lead">YelpGround</p>
+  				<ul class="list-group">
+				  <li class="list-group-item active">Cras justo odio</li>
+				  <li class="list-group-item">Dapibus ac facilisis in</li>
+				  <li class="list-group-item">Morbi leo risus</li>
+				</ul>
+			</div>
+  		</div>
+  		<div class="col-md-9">
+  			<div class="container">
+  				<div class="card" id="maincard">
+  					<img src="<%= ground.image %>" class="card-img-top" alt="<%= ground.name %>">
+ 					<div class="card-body">
+ 						<h4 class="card-title float-left"><%= ground.name%></h4>
+						<p class="float-right">9 € / Night</p>
+						<div class="clearfix"></div>
+ 						<p class="card-text"><%= ground.description%></p>
+ 					</div>
+  				</div>
+  			</div>
 
-	<div style="width: 70%; margin: 35px auto">
-		<div class="container">
-			<h1><%= ground.name%></h1>
-			<img src="<%= ground.image %>" alt="Ground image">
-			<p><%= ground.description%></p>
+  			
+			<div class="col-md-12">
 			<% ground.comments.forEach(function(comment){ %>
-				<p><%=comment.text %> - <%=comment.author %></p>
+				<div class="card comment">
+					<div class="card-body">
+						<p class="commentstext"><%=comment.text %></p>
+						<p class="commentsauthor"> - by <%=comment.author %> - </p>
+					</div>	
+				</div>
 			<% }) %>
+				<div class="card">
+					<% include ../comments/new_emb %>
+					</div>
+				</div>
+			</div>
 		</div>
-		<% include ../comments/new_emb %>
+  		</div>
 	</div>
+
 	<a href="/grounds">Back</a>
 
 	</div>
