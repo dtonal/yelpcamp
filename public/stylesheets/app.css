@@ -1,4 +1,9 @@
-#newCommentForm {
+#newForm {
+	background-color: #D5DFE5;
+	padding: 15px;
+}
+
+.test {
 	background-color: #D5DFE5;
 	padding: 15px;
 }
@@ -9,8 +14,8 @@
     margin-bottom: 20px;
 }
 
-.commentstext {
-
+.newground {
+	background-color: #D5DFE5;
 }
 
 .commentsauthor {
@@ -28,7 +33,7 @@
 }
 
 body {
-	background-color: #00272B;
+	background-color: #9AC2C9;
 }
 
 .jumbotron {
