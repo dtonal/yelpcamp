@@ -63,4 +63,32 @@ router.get("/:id", function(request, response){
 	});
 });
 
+// Edit
+router.get("/:id/edit", function(request, response){
+	var objectId = request.params.id;
+	Ground.findById(objectId, function(error, groundFromDb){
+		if(error){
+			console.log(error);
+		}else{
+			 response.render("grounds/edit" , {ground: groundFromDb});
+		}
+	});
+});
+
+// Update
+router.put("/:id", function(request, response){
+	var objectId = request.params.id;
+	Ground.findByIdAndUpdate(objectId, {
+			name: request.body.name,
+			description: request.body.description,
+			image: request.body.image
+	}, function(error, updatedGround){
+		if(error){
+			console.log(error);
+		}else{
+			response.redirect("/grounds/"+objectId);
+		}
+	});
+});
+
 module.exports = router;

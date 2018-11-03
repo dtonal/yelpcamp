@@ -7,6 +7,7 @@ var express 		= require("express"),
     passport 		= require("passport"),
     LocalStrategy	= require("passport-local"),
     User 			= require("./models/user"),
+    methodOverride 	= require("method-override"),
     mongoose 		= require("mongoose");
 
 
@@ -15,12 +16,13 @@ var authRoutes = require("./routes/auth");
 var groundsRoutes = require("./routes/grounds");
 
 // not longer needed
-SeedDb();
+// SeedDb();
 
 // Setup app
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
+app.use(methodOverride("_method"));
 
 // Configure Passport
 app.use(require("express-session")({
