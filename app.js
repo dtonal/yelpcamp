@@ -14,7 +14,8 @@ var commentsRoutes = require("./routes/comments");
 var authRoutes = require("./routes/auth");
 var groundsRoutes = require("./routes/grounds");
 
-SeedDb();
+// not longer needed
+// SeedDb();
 
 // Setup app
 app.use(bodyParser.urlencoded({extended: true}));

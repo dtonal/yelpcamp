@@ -23,41 +23,41 @@ var data = [
 function seedDB(){
    //Remove all Grounds
    Ground.remove({}, function(err){
-        if(err){
-            console.log(err);
-        }
-        console.log("removed Grounds!");
-        Comment.remove({}, function(err) {
-            if(err){
-                console.log(err);
-            }
-            console.log("removed comments!");
-             //add a few Grounds
-            data.forEach(function(seed){
-                Ground.create(seed, function(err, Ground){
-                    if(err){
-                        console.log(err)
-                    } else {
-                        console.log("added a Ground");
-                        //create a comment
-                        Comment.create(
-                            {
-                                text: "This place is great, but I wish there was internet",
-                                author: "Homer"
-                            }, function(err, comment){
-                                if(err){
-                                    console.log(err);
-                                } else {
-                                    Ground.comments.push(comment);
-                                    Ground.save();
-                                    console.log("Created new comment");
-                                    console.log(comment);
-                                }
-                            });
-                    }
-                });
-            });
-        });
+        // if(err){
+        //     console.log(err);
+        // }
+        // console.log("removed Grounds!");
+        // Comment.remove({}, function(err) {
+        //     if(err){
+        //         console.log(err);
+        //     }
+        //     console.log("removed comments!");
+        //      //add a few Grounds
+        //     data.forEach(function(seed){
+        //         Ground.create(seed, function(err, Ground){
+        //             if(err){
+        //                 console.log(err)
+        //             } else {
+        //                 console.log("added a Ground");
+        //                 //create a comment
+        //                 Comment.create(
+        //                     {
+        //                         text: "This place is great, but I wish there was internet",
+        //                         author: "Homer"
+        //                     }, function(err, comment){
+        //                         if(err){
+        //                             console.log(err);
+        //                         } else {
+        //                             Ground.comments.push(comment);
+        //                             Ground.save();
+        //                             console.log("Created new comment");
+        //                             console.log(comment);
+        //                         }
+        //                     });
+        //             }
+        //         });
+        //     });
+        // });
     }); 
     //add a few comments
 }

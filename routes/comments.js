@@ -29,9 +29,14 @@ router.post("/",isLoggedIn,  function(req, res){
             	Ground.findById(req.params.id, function(error, groundFromDb){
 					if(error){
 						console.log(error);
-					}else{                                  
+					}else{
+						comment.author.id = req.user._id;
+						comment.author.username = req.user.username;
+						comment.save();
+
 						groundFromDb.comments.push(comment);
                         groundFromDb.save();
+                        console.log(comment);
                         res.redirect("/grounds/"+groundFromDb._id);
 					}
 			});
