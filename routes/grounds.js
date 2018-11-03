@@ -9,6 +9,25 @@ function isLoggedIn(req, res, next){
 	res.redirect("/login");
 }
 
+function isUserOwner(request, response, next){
+	var objectId = request.params.id;
+	if(request.isAuthenticated()){
+		Ground.findById(objectId, function(error, groundFromDb){
+		if(error){
+			console.log(error);
+		}else{
+			if(groundFromDb.author.id.equals(request.user._id)){
+				next();
+			}else{
+				response.redirect("back");
+			}
+		}
+		});
+	}else{
+		response.redirect("back");
+	}
+}
+
 router.get("/", function(request, response){
 	Ground.find({}, function(error, allGrounds){
 		if(error){
@@ -64,19 +83,21 @@ router.get("/:id", function(request, response){
 });
 
 // Edit
-router.get("/:id/edit", function(request, response){
+router.get("/:id/edit", isUserOwner, function(request, response){
 	var objectId = request.params.id;
-	Ground.findById(objectId, function(error, groundFromDb){
+		Ground.findById(objectId, function(error, groundFromDb){
 		if(error){
 			console.log(error);
 		}else{
-			 response.render("grounds/edit" , {ground: groundFromDb});
+			response.render("grounds/edit" , {ground: groundFromDb});
 		}
-	});
+		});
+
+
 });
 
 // Update
-router.put("/:id", function(request, response){
+router.put("/:id",isUserOwner, function(request, response){
 	var objectId = request.params.id;
 	Ground.findByIdAndUpdate(objectId, {
 			name: request.body.name,
@@ -90,5 +111,18 @@ router.put("/:id", function(request, response){
 		}
 	});
 });
+
+// destroy
+router.delete("/:id",isUserOwner, function(request, response){
+	Ground.findByIdAndRemove(request.params.id, function(err){
+		if(err){
+			response.redirect("/grounds");
+		}else{
+			console.log("Deleted!");
+			response.redirect("/grounds");
+		}
+	});
+});
+
 
 module.exports = router;

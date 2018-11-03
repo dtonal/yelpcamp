@@ -21,7 +21,12 @@
 						<div class="clearfix"></div>
  						<p class="card-text"><%= ground.description%></p>
 						<p class="authorinfo"> - by <%= ground.author.username%> - </p>
-						<a class="btn btn-warning" href="/grounds/<%=ground._id %>/edit" role="button">Edit</a>
+						<%if(user && ground.author.id.equals(user._id)){ %>
+							<a class="btn btn-warning btn-sm" href="/grounds/<%=ground._id %>/edit" role="button">Edit</a>
+							<form id="delete-form" action="/grounds/<%= ground._id %>?_method=DELETE" method="POST">
+            					<button class="btn btn-danger btn-sm">Delete</button>
+          					</form>
+						<%} %>
  					</div>
   				</div>
   			</div>
@@ -33,6 +38,12 @@
 					<div class="card-body">
 						<p class="commentstext"><%=comment.text %></p>
 						<p class="commentsauthor"> - by <%=comment.author.username %> - </p>
+						<%if(user && comment.author.id.equals(user._id)){ %>
+							<a class="btn btn-warning btn-sm" href="/grounds/<%=ground._id %>/comments/<%=comment._id%>/edit" role="button">Edit</a>
+							<form id="delete-form" action="/grounds/<%= ground._id %>/comments/<%=comment._id%>?_method=DELETE" method="POST">
+            					<button class="btn btn-danger btn-sm">Delete</button>
+          					</form>
+						<%} %>
 					</div>	
 				</div>
 			<% }) %>

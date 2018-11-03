@@ -46,3 +46,13 @@ body {
 	font-style: italic;
 	font-size: 0.8em;
 }
+
+#delete-form {
+	display: inline;
+}
+
+.card-img-top {
+	max-height: 400px;
+    min-height: 150px;
+    object-fit: cover;
+}
