@@ -1,10 +1,13 @@
-var express 	= require("express"),
-	app 		= express(),
-    bodyParser  = require("body-parser"),
-    Ground  	= require("./models/ground"),
-    Comment  	= require("./models/comment"),
-    SeedDb  	= require("./seeds"),
-    mongoose 	= require("mongoose");
+var express 		= require("express"),
+	app 			= express(),
+    bodyParser  	= require("body-parser"),
+    Ground  		= require("./models/ground"),
+    Comment  		= require("./models/comment"),
+    SeedDb  		= require("./seeds"),
+    passport 		= require("passport"),
+    LocalStrategy	= require("passport-local"),
+    User 			= require("./models/user"),
+    mongoose 		= require("mongoose");
 
 SeedDb();
 
@@ -13,6 +16,24 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
+// Configure Passport
+app.use(require("express-session")({
+	secret: "Bamboo is very cute",
+	resave: false,
+	saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(function(req, res, next){
+	res.locals.user = req.user;
+	next();
+});
+
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 // Connect Mongodb
 mongoose.connect("mongodb://localhost/yelp", { useNewUrlParser: true })
 
@@ -20,12 +41,23 @@ app.get("/", function(request, response){
 	response.render("landing");
 });
 
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect("/login");
+}
+
 app.get("/grounds", function(request, response){
 	Ground.find({}, function(error, allGrounds){
 		if(error){
 			console.log(error);
 		}else{
-			response.render("grounds/index" , {grounds: allGrounds});
+			response.render("grounds/index" , 
+				{
+					grounds: allGrounds,
+					user: request.user
+				});
 		}
 	})
 });
@@ -79,7 +111,7 @@ app.get("/grounds/:id/comments/new", function(req, res){
 	});
 })
 
-app.post("/grounds/:id/comments", function(req, res){
+app.post("/grounds/:id/comments",isLoggedIn,  function(req, res){
 	// adding ground
 	Comment.create(req.body.comment, function(err, comment){
             if(err){
@@ -99,6 +131,45 @@ app.post("/grounds/:id/comments", function(req, res){
 					}
 			});
 }})});
+
+// AUTH Routes
+
+app.get("/register", function(req, res){
+	res.render("register");
+});
+
+app.post("/register", function(req, res){
+	User.register({username: req.body.username}, req.body.password, function(err, user){
+		if(err){
+			console.log(err);
+			return res.render("register");
+		}
+		passport.authenticate("local")(req, res, function(){
+			res.redirect("/grounds");
+		});
+	});
+});
+
+app.get("/login", function(req, res){
+	res.render("login");
+});
+
+app.post("/login",
+	passport.authenticate("local",
+		{
+			successRedirect: "/grounds",
+	 		failureRedirect: "/login"
+		}
+		), 
+	function(req, res){
+
+	}
+);
+
+app.get("/logout", function(req, res){
+	req.logout();
+	res.redirect("/grounds");
+});
 
 app.get("*", function(request, response){
 	response.send("Page not found");
