@@ -23,11 +23,11 @@ router.get("/", function(request, response){
 	})
 });
 
-router.get("/new", function(request, response){
+router.get("/new", isLoggedIn, function(request, response){
 	response.render("grounds/new");
 });
 
-router.post("/", function(req, res){
+router.post("/", isLoggedIn, function(req, res){
 	// adding ground
 	var newName = req.body.name;
 	var newImageUrl = req.body.image;
@@ -40,6 +40,9 @@ router.post("/", function(req, res){
 		if(error){
 			console.log(error);
 		}else{
+			ground.author.id = req.user._id;
+			ground.author.username = req.user.username;
+			ground.save();
 			console.log("new ground added");
 			console.log(ground);
 			// redirect to grounds

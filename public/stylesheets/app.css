@@ -40,3 +40,9 @@ body {
 	margin-top: 10px;
 	background-color: #D5DFE5;
 }
+
+.authorinfo {
+	margin-bottom: 0px;
+	font-style: italic;
+	font-size: 0.8em;
+}

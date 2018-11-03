@@ -15,7 +15,7 @@ var authRoutes = require("./routes/auth");
 var groundsRoutes = require("./routes/grounds");
 
 // not longer needed
-// SeedDb();
+SeedDb();
 
 // Setup app
 app.use(bodyParser.urlencoded({extended: true}));
