@@ -1,32 +1,7 @@
 var express 		= require("express"),
 	router			= express.Router(),
-	Ground 			= require("../models/ground");
-
-function isLoggedIn(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login");
-}
-
-function isUserOwner(request, response, next){
-	var objectId = request.params.id;
-	if(request.isAuthenticated()){
-		Ground.findById(objectId, function(error, groundFromDb){
-		if(error){
-			console.log(error);
-		}else{
-			if(groundFromDb.author.id.equals(request.user._id)){
-				next();
-			}else{
-				response.redirect("back");
-			}
-		}
-		});
-	}else{
-		response.redirect("back");
-	}
-}
+	Ground 			= require("../models/ground"),
+	middleware      = require("../middleware");
 
 router.get("/", function(request, response){
 	Ground.find({}, function(error, allGrounds){
@@ -42,11 +17,11 @@ router.get("/", function(request, response){
 	})
 });
 
-router.get("/new", isLoggedIn, function(request, response){
+router.get("/new", middleware.isLoggedIn, function(request, response){
 	response.render("grounds/new");
 });
 
-router.post("/", isLoggedIn, function(req, res){
+router.post("/", middleware.isLoggedIn, function(req, res){
 	// adding ground
 	var newName = req.body.name;
 	var newImageUrl = req.body.image;
@@ -83,7 +58,7 @@ router.get("/:id", function(request, response){
 });
 
 // Edit
-router.get("/:id/edit", isUserOwner, function(request, response){
+router.get("/:id/edit", middleware.isUserGroundOwner, function(request, response){
 	var objectId = request.params.id;
 		Ground.findById(objectId, function(error, groundFromDb){
 		if(error){
@@ -97,7 +72,7 @@ router.get("/:id/edit", isUserOwner, function(request, response){
 });
 
 // Update
-router.put("/:id",isUserOwner, function(request, response){
+router.put("/:id",middleware.isUserGroundOwner, function(request, response){
 	var objectId = request.params.id;
 	Ground.findByIdAndUpdate(objectId, {
 			name: request.body.name,
@@ -113,7 +88,7 @@ router.put("/:id",isUserOwner, function(request, response){
 });
 
 // destroy
-router.delete("/:id",isUserOwner, function(request, response){
+router.delete("/:id", middleware.isUserGroundOwner, function(request, response){
 	Ground.findByIdAndRemove(request.params.id, function(err){
 		if(err){
 			response.redirect("/grounds");

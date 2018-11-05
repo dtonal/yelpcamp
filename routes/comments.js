@@ -1,33 +1,8 @@
 var express 		= require("express"),
 	router			= express.Router({mergeParams: true}),
 	Ground 			= require("../models/ground"),
-	Comment 		= require("../models/comment");
-
-function isLoggedIn(req, res, next){
-	if(req.isAuthenticated()){
-		return next();
-	}
-	res.redirect("/login");
-}
-
-function isUserOwner(request, response, next){
-	var objectId = request.params.commentid;
-	if(request.isAuthenticated()){
-		Comment.findById(objectId, function(error, commentFromDb){
-		if(error){
-			console.log(error);
-		}else{
-			if(commentFromDb.author.id.equals(request.user._id)){
-				next();
-			}else{
-				response.redirect("back");
-			}
-		}
-		});
-	}else{
-		response.redirect("back");
-	}
-}
+	Comment 		= require("../models/comment"),
+	middleware      = require("../middleware");
 
 router.get("/new", function(req, res){
 	Ground.findById(req.params.id, function(error, groundFromDb){
@@ -39,7 +14,7 @@ router.get("/new", function(req, res){
 	});
 })
 
-router.post("/",isLoggedIn,  function(req, res){
+router.post("/", middleware.isLoggedIn,  function(req, res){
 	// adding ground
 	Comment.create(req.body.comment, function(err, comment){
             if(err){
@@ -62,7 +37,7 @@ router.post("/",isLoggedIn,  function(req, res){
 }})});
 
 // Edit
-router.get("/:commentid/edit", isUserOwner, function(request, response){
+router.get("/:commentid/edit", middleware.isUserCommentOwner, function(request, response){
 	var objectId = request.params.commentid;
 	console.log("editing comment: " + objectId);
 		Comment.findById(objectId, function(error, commentFromDb){
@@ -79,7 +54,7 @@ router.get("/:commentid/edit", isUserOwner, function(request, response){
 });
 
 // Update
-router.put("/:commentid",isUserOwner, function(request, response){
+router.put("/:commentid",middleware.isUserCommentOwner, function(request, response){
 	var objectId = request.params.commentid;
 	Comment.findByIdAndUpdate(objectId, {
 			text: request.body.text
@@ -94,7 +69,7 @@ router.put("/:commentid",isUserOwner, function(request, response){
 });
 
 // destroy
-router.delete("/:commentid",isUserOwner, function(request, response){
+router.delete("/:commentid",middleware.isUserCommentOwner, function(request, response){
 	Comment.findByIdAndRemove(request.params.commentid, function(err){
 		if(err){
 			response.redirect("back");
