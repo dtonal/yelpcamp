@@ -39,3 +39,17 @@
 	    </ul>
 	  </div>
 	</nav>
+	<% if(errorMessage && errorMessage.length > 0){ %>
+		<div class="container">
+			<div class="alert alert-danger" role="alert">
+  				<strong><%=errorMessage %></strong>
+			</div>
+		</div>
+	<%}%>
+		<% if(successMessage && successMessage.length > 0){ %>
+		<div class="container">
+			<div class="alert alert-success" role="alert">
+  				<strong><%=successMessage %></strong>
+			</div>
+		</div>
+	<%}%>

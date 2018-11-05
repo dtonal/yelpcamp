@@ -8,7 +8,8 @@ var express 		= require("express"),
     LocalStrategy	= require("passport-local"),
     User 			= require("./models/user"),
     methodOverride 	= require("method-override"),
-    mongoose 		= require("mongoose");
+    mongoose 		= require("mongoose"),
+    flash           = require('connect-flash');
 
 
 var commentsRoutes = require("./routes/comments");
@@ -24,6 +25,10 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(methodOverride("_method"));
 
+// config flash message
+app.use(flash());
+
+
 // Configure Passport
 app.use(require("express-session")({
 	secret: "Bamboo is very cute",
@@ -35,6 +40,8 @@ app.use(passport.session());
 
 app.use(function(req, res, next){
 	res.locals.user = req.user;
+    res.locals.errorMessage = req.flash("error");
+    res.locals.successMessage = req.flash("success");
 	next();
 });
 

@@ -43,6 +43,7 @@ router.post("/login",
 
 router.get("/logout", function(req, res){
 	req.logout();
+	req.flash("success", "Succesfully logged out!");
 	res.redirect("/grounds");
 });
 
